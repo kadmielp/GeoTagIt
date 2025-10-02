@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Photo } from '../types';
-import { LocationMarkerIcon, TrashIcon, ExclamationCircleIcon } from './Icons';
+import { LocationMarkerIcon, TrashIcon, ExclamationCircleIcon, CheckIcon } from './Icons';
 
 interface PhotoListItemProps {
   photo: Photo;
@@ -54,7 +54,7 @@ const PhotoListItem: React.FC<PhotoListItemProps> = ({ photo, isSelected, onSele
       {/* Selection indicator for multi-select mode */}
       {isMultiSelectMode && isSelected && (
         <div className="absolute top-1.5 left-1.5 bg-cyan-500 p-1 rounded-full">
-          <LocationMarkerIcon className="w-3 h-3 text-white" />
+          <CheckIcon className="w-3 h-3 text-white" />
         </div>
       )}
       
@@ -65,7 +65,7 @@ const PhotoListItem: React.FC<PhotoListItemProps> = ({ photo, isSelected, onSele
       )}
 
       {photo.error && (
-        <div className="absolute top-1.5 left-1.5 bg-red-500/80 p-1 rounded-full">
+        <div className={`absolute top-1.5 ${isMultiSelectMode && isSelected ? 'left-8' : 'left-1.5'} bg-red-500/80 p-1 rounded-full`}>
             <ExclamationCircleIcon className="w-3 h-3 text-white" />
         </div>
       )}
