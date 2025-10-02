@@ -505,7 +505,20 @@ const App: React.FC = () => {
                 </div>
 
                 <div className="flex items-center space-x-2">
-                  {/* Grouping popover */}
+                  <div className="flex items-center space-x-1 bg-zinc-200 dark:bg-zinc-800 p-1 rounded-lg">
+                    {/* Filter Buttons */}
+                    <button onClick={() => setFilterMode('all')} title="Show All Photos" className={`p-1 rounded-md transition-colors ${filterMode === 'all' ? 'bg-white dark:bg-zinc-700' : 'hover:bg-zinc-300 dark:hover:bg-zinc-700/50'}`}>
+                        <ViewGridIcon className={`w-4 h-4 ${filterMode === 'all' ? 'text-cyan-500' : 'text-zinc-500 dark:text-zinc-400'}`} />
+                    </button>
+                    <button onClick={() => setFilterMode('geotagged')} title="Show Geotagged Photos" className={`p-1 rounded-md transition-colors ${filterMode === 'geotagged' ? 'bg-white dark:bg-zinc-700' : 'hover:bg-zinc-300 dark:hover:bg-zinc-700/50'}`}>
+                        <LocationMarkerIcon className={`w-4 h-4 ${filterMode === 'geotagged' ? 'text-cyan-500' : 'text-zinc-500 dark:text-zinc-400'}`} />
+                    </button>
+                    <button onClick={() => setFilterMode('untagged')} title="Show Untagged Photos" className={`p-1 rounded-md transition-colors ${filterMode === 'untagged' ? 'bg-white dark:bg-zinc-700' : 'hover:bg-zinc-300 dark:hover:bg-zinc-700/50'}`}>
+                        <LocationMarkerOffIcon className={`w-4 h-4 ${filterMode === 'untagged' ? 'text-cyan-500' : 'text-zinc-500 dark:text-zinc-400'}`} />
+                    </button>
+                  </div>
+
+                  {/* Grouping popover at the far right */}
                   <div className="relative" data-grouping-menu>
                     <button
                       onClick={() => setIsGroupingMenuOpen(v => !v)}
@@ -516,7 +529,7 @@ const App: React.FC = () => {
                     </button>
 
                     {isGroupingMenuOpen && (
-                      <div className="absolute left-0 mt-2 w-56 rounded-xl shadow-2xl border border-zinc-200/50 dark:border-zinc-800/60 bg-zinc-50 dark:bg-zinc-800/90 backdrop-blur z-20">
+                      <div className="absolute right-0 mt-2 w-56 rounded-xl shadow-2xl border border-zinc-200/50 dark:border-zinc-800/60 bg-zinc-50 dark:bg-zinc-800/90 backdrop-blur z-20">
                         <div className="px-3 pt-3 pb-2 text-[10px] font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">Group By</div>
                         <button
                           onClick={() => { setGroupingMode('none'); setIsGroupingMenuOpen(false); }}
@@ -534,19 +547,6 @@ const App: React.FC = () => {
                         </button>
                       </div>
                     )}
-                  </div>
-
-                  <div className="flex items-center space-x-1 bg-zinc-200 dark:bg-zinc-800 p-1 rounded-lg">
-                    {/* Filter Buttons */}
-                    <button onClick={() => setFilterMode('all')} title="Show All Photos" className={`p-1 rounded-md transition-colors ${filterMode === 'all' ? 'bg-white dark:bg-zinc-700' : 'hover:bg-zinc-300 dark:hover:bg-zinc-700/50'}`}>
-                        <ViewGridIcon className={`w-4 h-4 ${filterMode === 'all' ? 'text-cyan-500' : 'text-zinc-500 dark:text-zinc-400'}`} />
-                    </button>
-                    <button onClick={() => setFilterMode('geotagged')} title="Show Geotagged Photos" className={`p-1 rounded-md transition-colors ${filterMode === 'geotagged' ? 'bg-white dark:bg-zinc-700' : 'hover:bg-zinc-300 dark:hover:bg-zinc-700/50'}`}>
-                        <LocationMarkerIcon className={`w-4 h-4 ${filterMode === 'geotagged' ? 'text-cyan-500' : 'text-zinc-500 dark:text-zinc-400'}`} />
-                    </button>
-                    <button onClick={() => setFilterMode('untagged')} title="Show Untagged Photos" className={`p-1 rounded-md transition-colors ${filterMode === 'untagged' ? 'bg-white dark:bg-zinc-700' : 'hover:bg-zinc-300 dark:hover:bg-zinc-700/50'}`}>
-                        <LocationMarkerOffIcon className={`w-4 h-4 ${filterMode === 'untagged' ? 'text-cyan-500' : 'text-zinc-500 dark:text-zinc-400'}`} />
-                    </button>
                   </div>
                 </div>
               </div>
