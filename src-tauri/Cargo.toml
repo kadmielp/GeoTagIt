@@ -1,6 +1,6 @@
 [package]
 name = "geotagit"
-version = "0.1.0"
+version = "1.0.0"
 description = "A simple and elegant application to select and geotag your photos with ease."
 authors = [""]
 license = ""

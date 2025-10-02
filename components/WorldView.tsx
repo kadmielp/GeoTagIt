@@ -16,6 +16,14 @@ const WorldView: React.FC<WorldViewProps> = ({ photos }) => {
   // Initialize map and cluster group
   useEffect(() => {
     if (mapRef.current && !mapInstanceRef.current) {
+        // Fix default Leaflet marker icons for production builds
+        delete (L.Icon.Default.prototype as any)._getIconUrl;
+        L.Icon.Default.mergeOptions({
+            iconRetinaUrl: '/images/marker-icon-2x.png',
+            iconUrl: '/images/marker-icon.png',
+            shadowUrl: '/images/marker-shadow.png',
+        });
+
         mapInstanceRef.current = L.map(mapRef.current, {
             zoomControl: false
         }).setView([20, 0], 2);
@@ -67,7 +75,7 @@ const WorldView: React.FC<WorldViewProps> = ({ photos }) => {
 
       const icon = L.divIcon({
           html: `<img src="${photo.dataUrl}" alt="${photo.name}" class="w-full h-full object-cover rounded-full shadow-lg" />`,
-          className: 'w-12 h-12 rounded-full border-2 border-cyan-500 dark:border-cyan-400 bg-zinc-100 dark:bg-zinc-800 p-0 transform hover:scale-110 transition-transform duration-200 cursor-pointer overflow-hidden',
+          className: 'photo-marker w-12 h-12 rounded-full border-2 border-cyan-500 dark:border-cyan-400 bg-zinc-100 dark:bg-zinc-800 p-0 transform hover:scale-110 transition-transform duration-200 cursor-pointer overflow-hidden',
           iconSize: [48, 48],
           iconAnchor: [24, 24],
       });

@@ -31,6 +31,14 @@
   color: #d4d4d8; /* zinc-300 */
 }
 
+/* Ensure markers are visible in dark mode, but exclude photo markers */
+.dark .leaflet-marker-icon:not(.photo-marker) {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+.dark .leaflet-marker-shadow {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+
 /* Custom Marker Cluster styles for theme consistency */
 .marker-cluster {
   transition: background-color 0.2s ease-in-out;

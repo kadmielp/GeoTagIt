@@ -65,6 +65,15 @@ npm run dev
 5. **Apply**: Click "Apply Geotag" to save location data to selected photos
 6. **View**: Switch to World View to see all geotagged photos on the map
 
+## Recent Updates
+
+### v1.0.0 - Latest Release
+- **Fixed Pin Visibility**: Resolved issue where map pins weren't visible in production builds
+- **Improved Dark Mode**: Fixed photo inversion in world view while maintaining dark mode functionality
+- **Enhanced Marker Styling**: Removed shadows from pin markers for cleaner appearance
+- **Production Build Fixes**: Added local Leaflet assets to ensure proper functionality in built versions
+- **Better Asset Management**: Improved handling of map icons and markers across different environments
+
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md) for detailed version history and changes.

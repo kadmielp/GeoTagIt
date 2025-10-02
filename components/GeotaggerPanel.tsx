@@ -37,6 +37,14 @@ const GeotaggerPanel: React.FC<GeotaggerPanelProps> = ({ selectedPhotos, onApply
 
   useEffect(() => {
     if (mapRef.current && !mapInstanceRef.current) {
+        // Fix default Leaflet marker icons for production builds
+        delete (L.Icon.Default.prototype as any)._getIconUrl;
+        L.Icon.Default.mergeOptions({
+            iconRetinaUrl: '/images/marker-icon-2x.png',
+            iconUrl: '/images/marker-icon.png',
+            shadowUrl: '', // Remove shadow
+        });
+
         mapInstanceRef.current = L.map(mapRef.current, {
             zoomControl: false
         }).setView([20, 0], 2);
@@ -106,6 +114,7 @@ const GeotaggerPanel: React.FC<GeotaggerPanelProps> = ({ selectedPhotos, onApply
                 setLat(position.lat.toFixed(4));
                 setLng(position.lng.toFixed(4));
               });
+
 
           } else {
               markerInstanceRef.current.setLatLng(latLng);

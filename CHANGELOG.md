@@ -26,11 +26,16 @@ All notable changes to GeoTagIt will be documented in this file.
 - **Memoized Grouping**: Performance-optimized photo grouping calculations
 - **Better Error Handling**: Improved positioning of error indicators
 - **Type Safety**: Enhanced TypeScript interfaces and prop types
+- **Production Build Fixes**: Added local Leaflet assets for proper marker functionality
+- **Asset Management**: Improved handling of map icons and markers across environments
 
 ### Bug Fixes
 - **Fixed Duplicate Buttons**: Removed confusing duplicate grid icons
 - **Improved Icon Semantics**: Proper icons for different functions (checkbox for multi-select, collection for grouping)
 - **Better State Management**: Consistent selection behavior across different modes
+- **Fixed Pin Visibility**: Resolved issue where map pins weren't visible in production builds
+- **Fixed Photo Inversion**: Corrected photo colors in world view dark mode
+- **Enhanced Marker Styling**: Removed shadows from pin markers for cleaner appearance
 
 ---
 
