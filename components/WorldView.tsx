@@ -67,7 +67,7 @@ const WorldView: React.FC<WorldViewProps> = ({ photos }) => {
 
       const icon = L.divIcon({
           html: `<img src="${photo.dataUrl}" alt="${photo.name}" class="w-full h-full object-cover rounded-full shadow-lg" />`,
-          className: 'w-12 h-12 rounded-full border-2 border-cyan-500 dark:border-cyan-400 bg-zinc-100 dark:bg-zinc-800 p-0.5 transform hover:scale-110 transition-transform duration-200 cursor-pointer',
+          className: 'w-12 h-12 rounded-full border-2 border-cyan-500 dark:border-cyan-400 bg-zinc-100 dark:bg-zinc-800 p-0 transform hover:scale-110 transition-transform duration-200 cursor-pointer overflow-hidden',
           iconSize: [48, 48],
           iconAnchor: [24, 24],
       });
