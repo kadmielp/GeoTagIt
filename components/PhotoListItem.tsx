@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Photo } from '../types';
-import { LocationMarkerIcon, TrashIcon, ExclamationCircleIcon, CheckboxIcon } from './Icons';
+import { LocationMarkerIcon, TrashIcon, ExclamationCircleIcon } from './Icons';
 
 interface PhotoListItemProps {
   photo: Photo;
@@ -29,6 +29,9 @@ const PhotoListItem: React.FC<PhotoListItemProps> = ({ photo, isSelected, onSele
     if (isSelected) {
       return 'ring-2 ring-offset-2 ring-offset-zinc-50 dark:ring-offset-zinc-900 ring-cyan-500';
     }
+    if (isMultiSelectMode) {
+      return 'ring-1 ring-zinc-200 dark:ring-zinc-700/50 hover:ring-cyan-400 hover:ring-2';
+    }
     return 'ring-1 ring-zinc-200 dark:ring-zinc-700/50 hover:ring-cyan-400';
   };
 
@@ -48,10 +51,10 @@ const PhotoListItem: React.FC<PhotoListItemProps> = ({ photo, isSelected, onSele
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
       
-      {/* Multi-select checkbox */}
-      {isMultiSelectMode && (
-        <div className="absolute top-1.5 left-1.5 bg-black/50 p-1 rounded-full">
-          <CheckboxIcon className={`w-3 h-3 ${isSelected ? 'text-cyan-400' : 'text-white'}`} />
+      {/* Selection indicator for multi-select mode */}
+      {isMultiSelectMode && isSelected && (
+        <div className="absolute top-1.5 left-1.5 bg-cyan-500 p-1 rounded-full">
+          <LocationMarkerIcon className="w-3 h-3 text-white" />
         </div>
       )}
       
@@ -62,7 +65,7 @@ const PhotoListItem: React.FC<PhotoListItemProps> = ({ photo, isSelected, onSele
       )}
 
       {photo.error && (
-        <div className={`absolute top-1.5 ${isMultiSelectMode ? 'left-8' : 'left-1.5'} bg-red-500/80 p-1 rounded-full`}>
+        <div className="absolute top-1.5 left-1.5 bg-red-500/80 p-1 rounded-full">
             <ExclamationCircleIcon className="w-3 h-3 text-white" />
         </div>
       )}

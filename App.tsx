@@ -495,6 +495,27 @@ const App: React.FC = () => {
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center space-x-2">
                    <h2 className="text-sm font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Photos</h2>
+                   {isMultiSelectMode && (
+                     <div className="flex items-center space-x-2">
+                       {selectedPhotoIds.length > 0 && (
+                         <span className="text-xs text-cyan-500 dark:text-cyan-400 font-medium">
+                           {selectedPhotoIds.length} selected
+                         </span>
+                       )}
+                       <button
+                         onClick={() => {
+                           if (selectedPhotoIds.length === filteredPhotos.length) {
+                             setSelectedPhotoIds([]);
+                           } else {
+                             setSelectedPhotoIds(filteredPhotos.map(p => p.id));
+                           }
+                         }}
+                         className="text-xs text-zinc-500 dark:text-zinc-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors"
+                       >
+                         {selectedPhotoIds.length === filteredPhotos.length ? 'Clear All' : 'Select All'}
+                       </button>
+                     </div>
+                   )}
                    <button
                      onClick={handleOpenFileDialog}
                      title="Add photos"
