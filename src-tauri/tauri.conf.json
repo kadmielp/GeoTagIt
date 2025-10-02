@@ -31,6 +31,10 @@
         "removeFile": true,
         "renameFile": true,
         "exists": true
+      },
+      "protocol": {
+        "asset": true,
+        "assetScope": ["**/*"]
       }
     },
     "bundle": {
@@ -79,11 +83,6 @@
         "transparent": false
       }
     ]
-    ,
-    "protocol": {
-      "asset": {
-        "scope": ["**/*"]
-      }
-    }
+    
   }
 }
