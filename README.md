@@ -1,4 +1,4 @@
-# GeoTagIt v1.0.0
+# GeoTagIt
 
 ![Editor Screenshot](https://raw.githubusercontent.com/kadmielp/GeoTagIt/main/public/images/editor.png)
 
