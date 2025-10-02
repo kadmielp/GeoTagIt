@@ -23,7 +23,7 @@ import GeotaggerPanel from './components/GeotaggerPanel';
 import StatusBar from './components/StatusBar';
 import SettingsModal from './components/SettingsModal';
 import WorldView from './components/WorldView';
-import { LocationMarkerIcon, CheckCircleIcon, ViewGridIcon, LocationMarkerOffIcon, PlusIcon, CollectionIcon, CheckIcon } from './components/Icons';
+import { LocationMarkerIcon, CheckCircleIcon, ViewGridIcon, LocationMarkerOffIcon, PlusIcon, CollectionIcon, CheckIcon, Squares2X2Icon } from './components/Icons';
 import PhotoUploader from './components/PhotoUploader';
 import { writeGeotagToImage, downloadImageWithGeotag } from './utils/exifWriter';
 
@@ -41,6 +41,7 @@ const App: React.FC = () => {
   const [filterMode, setFilterMode] = useState<FilterMode>('all');
   const [groupingMode, setGroupingMode] = useState<GroupingMode>('none');
   const [isGroupingMenuOpen, setIsGroupingMenuOpen] = useState<boolean>(false);
+  const [isMultiSelectMode, setIsMultiSelectMode] = useState<boolean>(false);
   
   const [theme, setTheme] = useState<Theme>(() => {
     return (localStorage.getItem('theme') as Theme) || 'dark';
@@ -506,6 +507,15 @@ const App: React.FC = () => {
 
                 <div className="flex items-center space-x-2">
                   <div className="flex items-center space-x-1 bg-zinc-200 dark:bg-zinc-800 p-1 rounded-lg">
+                    {/* Multi-select toggle */}
+                    <button 
+                      onClick={() => setIsMultiSelectMode(!isMultiSelectMode)} 
+                      title={isMultiSelectMode ? "Exit Multi-Select Mode" : "Enter Multi-Select Mode"}
+                      className={`p-1 rounded-md transition-colors ${isMultiSelectMode ? 'bg-white dark:bg-zinc-700' : 'hover:bg-zinc-300 dark:hover:bg-zinc-700/50'}`}
+                    >
+                      <Squares2X2Icon className={`w-4 h-4 ${isMultiSelectMode ? 'text-cyan-500' : 'text-zinc-500 dark:text-zinc-400'}`} />
+                    </button>
+
                     {/* Filter Buttons */}
                     <button onClick={() => setFilterMode('all')} title="Show All Photos" className={`p-1 rounded-md transition-colors ${filterMode === 'all' ? 'bg-white dark:bg-zinc-700' : 'hover:bg-zinc-300 dark:hover:bg-zinc-700/50'}`}>
                         <ViewGridIcon className={`w-4 h-4 ${filterMode === 'all' ? 'text-cyan-500' : 'text-zinc-500 dark:text-zinc-400'}`} />
@@ -561,6 +571,7 @@ const App: React.FC = () => {
                           isSelected={selectedPhotoIds.includes(photo.id)}
                           onSelect={handleSelectPhoto}
                           onDelete={handleDeletePhoto}
+                          isMultiSelectMode={isMultiSelectMode}
                         />
                       ))}
                     </div>
@@ -579,6 +590,7 @@ const App: React.FC = () => {
                                 isSelected={selectedPhotoIds.includes(photo.id)}
                                 onSelect={handleSelectPhoto}
                                 onDelete={handleDeletePhoto}
+                                isMultiSelectMode={isMultiSelectMode}
                               />
                             ))}
                           </div>
