@@ -230,6 +230,17 @@ const App: React.FC = () => {
 
   const handleSelectPhoto = useCallback((id: string, isCtrlOrCmdKey: boolean) => {
     setSelectedPhotoIds(prevIds => {
+      // In multi-select mode, always toggle selection without affecting others
+      if (isMultiSelectMode) {
+        const isSelected = prevIds.includes(id);
+        if (isSelected) {
+          return prevIds.filter(prevId => prevId !== id);
+        } else {
+          return [...prevIds, id];
+        }
+      }
+      
+      // Normal mode behavior
       if (isCtrlOrCmdKey) {
         const isSelected = prevIds.includes(id);
         if (isSelected) {
@@ -241,7 +252,7 @@ const App: React.FC = () => {
         return [id];
       }
     });
-  }, []);
+  }, [isMultiSelectMode]);
 
   const selectedPhotos = useMemo(() => {
     return selectedPhotoIds.map(id => photos.find(p => p.id === id)).filter((p): p is Photo => p !== undefined);
