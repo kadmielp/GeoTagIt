@@ -1,0 +1,37 @@
+#![cfg_attr(
+  all(not(debug_assertions), target_os = "windows"),
+  windows_subsystem = "windows"
+)]
+
+#[derive(serde::Serialize, serde::Deserialize, Clone, Debug)]
+struct Geotag {
+    lat: f64,
+    lng: f64,
+}
+
+#[tauri::command]
+fn read_geotag(path: String) -> Result<Option<Geotag>, String> {
+    let exif_data = rexif::parse_file(&path).map_err(|e| e.to_string())?;
+    match exif_data.gps {
+        Some((lat, lng)) => Ok(Some(Geotag { lat, lng })),
+        None => Ok(None),
+    }
+}
+
+#[tauri::command]
+fn write_geotag(path: String, geotag: Geotag) -> Result<(), String> {
+    rexif::write_location(&path, (geotag.lat, geotag.lng)).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn clear_geotag(path: String) -> Result<(), String> {
+    rexif::delete_location(&path).map_err(|e| e.to_string())
+}
+
+
+fn main() {
+  tauri::Builder::default()
+    .invoke_handler(tauri::generate_handler![read_geotag, write_geotag, clear_geotag])
+    .run(tauri::generate_context!())
+    .expect("error while running tauri application");
+}

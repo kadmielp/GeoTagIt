@@ -1,0 +1,89 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/schema.json",
+  "build": {
+    "beforeBuildCommand": "npm run build",
+    "beforeDevCommand": "npm run dev",
+    "devPath": "http://localhost:9090",
+    "distDir": "../dist"
+  },
+  "package": {
+    "productName": "GeoTagIt",
+    "version": "0.1.0"
+  },
+  "tauri": {
+    "allowlist": {
+      "dialog": {
+        "open": true,
+        "all": true,
+        "ask": true,
+        "confirm": true,
+        "message": true,
+        "save": true
+      },
+      "fs": {
+        "all": true,
+        "readFile": true,
+        "writeFile": true,
+        "readDir": true,
+        "copyFile": true,
+        "createDir": true,
+        "removeDir": true,
+        "removeFile": true,
+        "renameFile": true,
+        "exists": true
+      }
+    },
+    "bundle": {
+      "active": true,
+      "category": "Photography",
+      "copyright": "",
+      "deb": {
+        "depends": []
+      },
+      "externalBin": [],
+      "icon": [
+        "icons/favicon.ico"
+      ],
+      "identifier": "com.geotagit.dev",
+      "longDescription": "A simple and elegant application to select and geotag your photos with ease.",
+      "macOS": {
+        "entitlements": null,
+        "exceptionDomain": "",
+        "frameworks": [],
+        "providerShortName": null,
+        "signingIdentity": null
+      },
+      "resources": [],
+      "shortDescription": "Visually geotag your photos.",
+      "targets": "all",
+      "windows": {
+      }
+    },
+    "security": {
+      "csp": "default-src 'self' asset: https://asset.localhost; img-src 'self' asset: https://asset.localhost https://*.tile.openstreetmap.org https://nominatim.openstreetmap.org blob: data:; connect-src 'self' asset: https://asset.localhost https://nominatim.openstreetmap.org; style-src 'self' 'unsafe-inline' asset: https://asset.localhost; script-src 'self' asset: https://asset.localhost",
+      "devCsp": "default-src 'self' http://localhost:9090 asset: https://asset.localhost blob: data:; img-src 'self' http://localhost:9090 asset: https://asset.localhost https://*.tile.openstreetmap.org https://nominatim.openstreetmap.org blob: data:; connect-src 'self' http://localhost:9090 https://nominatim.openstreetmap.org; style-src 'self' 'unsafe-inline' http://localhost:9090; script-src 'self' http://localhost:9090 'unsafe-eval'"
+    },
+    "windows": [
+      {
+        "label": "main",
+        "title": "GeoTagIt",
+        "width": 1280,
+        "height": 800,
+        "minWidth": 900,
+        "minHeight": 600,
+        "resizable": true,
+        "fullscreen": false,
+        "decorations": true,
+        "titleBarStyle": "Visible",
+        "hiddenTitle": false,
+        "transparent": false
+      }
+    ]
+    ,
+    "protocol": {
+      "asset": {
+        "scope": ["**/*"]
+      }
+    }
+  }
+}

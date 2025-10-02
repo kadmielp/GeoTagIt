@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run tauri:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)",
+      "Bash(taskkill.exe:*)",
+      "Bash(cmd /c:*)",
+      "Bash(npx vite:*)",
+      "Bash(cargo tauri dev:*)",
+      "Bash(dir)",
+      "Bash(npm run build:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
