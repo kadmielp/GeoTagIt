@@ -1,26 +1,29 @@
 # GeoTagIt v1.0.0
 
+![Editor Screenshot](https://raw.githubusercontent.com/kadmielp/GeoTagIt/main/public/images/editor.png)
+
 GeoTagIt is a modern, cross-platform desktop application designed for intuitive and efficient geotagging of your photos. Built with a focus on user experience and performance, it provides a simple way to add, edit, and view location data for your image library.
 
 ## Key Features
 
-*   **Direct File Modification**: Reads and writes EXIF geotag data directly to your image files (JPEG & TIFF), ensuring changes are permanent and recognized by other software.
-*   **Interactive Map Tagger**: Visually pin locations by clicking directly on a world map, fine-tune coordinates by dragging, or manually input precise latitude and longitude.
-*   **Instant Location Search**: Get real-time address suggestions as you type, powered by OpenStreetMap's Nominatim geocoding service.
-*   **Advanced Multi-Select**: 
-    *   Toggle multi-select mode with a dedicated checkbox button
-    *   Click photos to toggle selection without deselecting others
-    *   Select All/Clear All functionality
-    *   Visual selection counter and check icons
-*   **Smart Photo Organization**:
-    *   Group photos by folder with sticky headers
-    *   Filter by all, geotagged, or untagged photos
-    *   Clean border-only selection design
-*   **Multiple Views**:
-    *   **Editor View**: Side-by-side layout with photo list, preview, and geotagging panel
-    *   **World View**: See all geotagged photos plotted on a global map with circular thumbnails
-*   **Modern UI**: Light & dark modes with beautiful, responsive design
-*   **Cross-Platform**: Runs as desktop app (Tauri) or in web browser
+* **Direct File Modification**: Reads and writes EXIF geotag data directly to your image files (JPEG & TIFF), ensuring changes are permanent and recognized by other software.
+* **Interactive Map Tagger**: Visually pin locations by clicking directly on a world map, fine-tune coordinates by dragging, or manually input precise latitude and longitude.
+* **Instant Location Search**: Get real-time address suggestions as you type, powered by OpenStreetMap's Nominatim geocoding service.
+* **Advanced Multi-Select**: 
+    * Toggle multi-select mode with a dedicated checkbox button
+    * Click photos to toggle selection without deselecting others
+    * Select All/Clear All functionality
+    * Visual selection counter and check icons
+* **Smart Photo Organization**:
+    * Group photos by folder with sticky headers
+    * Filter by all, geotagged, or untagged photos
+    * Clean border-only selection design
+* **Modern UI**: Light & dark modes with beautiful, responsive design
+* **Cross-Platform**: Runs as desktop app (Tauri) or in web browser
+* **Multiple Views**:
+    * **Editor View**: Side-by-side layout with photo list, preview, and geotagging panel
+    * **World View**: See all geotagged photos plotted on a global map with circular thumbnails
+   ![Editor Screenshot](https://raw.githubusercontent.com/kadmielp/GeoTagIt/main/public/images/world_view.png)
 
 ## Technologies Used
 
