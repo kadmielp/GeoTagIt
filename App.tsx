@@ -23,13 +23,14 @@ import GeotaggerPanel from './components/GeotaggerPanel';
 import StatusBar from './components/StatusBar';
 import SettingsModal from './components/SettingsModal';
 import WorldView from './components/WorldView';
-import { LocationMarkerIcon, CheckCircleIcon, ViewGridIcon, LocationMarkerOffIcon } from './components/Icons';
+import { LocationMarkerIcon, CheckCircleIcon, ViewGridIcon, LocationMarkerOffIcon, PlusIcon } from './components/Icons';
 import PhotoUploader from './components/PhotoUploader';
 import { writeGeotagToImage, downloadImageWithGeotag } from './utils/exifWriter';
 
 export type Theme = 'light' | 'dark';
 export type View = 'editor' | 'world';
 export type FilterMode = 'all' | 'geotagged' | 'untagged';
+type GroupingMode = 'none' | 'folder';
 
 const App: React.FC = () => {
   const [photos, setPhotos] = useState<Photo[]>([]);
@@ -38,6 +39,7 @@ const App: React.FC = () => {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [view, setView] = useState<View>('editor');
   const [filterMode, setFilterMode] = useState<FilterMode>('all');
+  const [groupingMode, setGroupingMode] = useState<GroupingMode>('none');
   
   const [theme, setTheme] = useState<Theme>(() => {
     return (localStorage.getItem('theme') as Theme) || 'dark';
@@ -438,6 +440,27 @@ const App: React.FC = () => {
     }
   }, [photos, filterMode]);
 
+  // Group photos by selected mode (memoized)
+  const groupedPhotos = useMemo(() => {
+    if (groupingMode === 'none') {
+      return { all_photos: filteredPhotos } as Record<string, Photo[]>;
+    }
+
+    // Group by folder based on `path`. If no folder, bucket as Manually Added
+    const groups: Record<string, Photo[]> = {};
+    filteredPhotos.forEach((photo) => {
+      const path = photo.path || '';
+      // Try to extract folder from absolute or relative path
+      const normalized = path.replace(/\\/g, '/');
+      const lastSlash = normalized.lastIndexOf('/');
+      const folder = lastSlash > 0 ? normalized.substring(0, lastSlash) : '';
+      const key = folder ? folder : 'Manually Added';
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(photo);
+    });
+    return groups;
+  }, [filteredPhotos, groupingMode]);
+
   return (
     <div className="flex flex-col h-screen antialiased">
       <Header 
@@ -453,11 +476,31 @@ const App: React.FC = () => {
           <>
             <aside className="w-[28rem] bg-zinc-50 dark:bg-zinc-900/70 p-4 flex flex-col flex-shrink-0 border-r border-zinc-200 dark:border-zinc-800">
               <div className="flex items-center justify-between mb-4">
-                 <div className="flex items-center space-x-2">
-                    <h2 className="text-sm font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Photos</h2>
-                 </div>
+                <div className="flex items-center space-x-2">
+                   <h2 className="text-sm font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Photos</h2>
+                   <button
+                     onClick={handleOpenFileDialog}
+                     title="Add photos"
+                     aria-label="Add photos"
+                     className="ml-1 p-1 rounded-md bg-zinc-200 hover:bg-zinc-300 dark:bg-zinc-800 dark:hover:bg-zinc-700 transition-colors"
+                   >
+                     <PlusIcon className="w-4 h-4 text-zinc-700 dark:text-zinc-200" />
+                   </button>
+                </div>
 
-                <div className="flex items-center space-x-1 bg-zinc-200 dark:bg-zinc-800 p-1 rounded-lg">
+                <div className="flex items-center space-x-2">
+                  {/* Grouping dropdown */}
+                  <select
+                    value={groupingMode}
+                    onChange={(e) => setGroupingMode(e.target.value as GroupingMode)}
+                    title="Group photos"
+                    className="text-xs bg-zinc-200 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  >
+                    <option value="none">No Grouping</option>
+                    <option value="folder">Folder</option>
+                  </select>
+
+                  <div className="flex items-center space-x-1 bg-zinc-200 dark:bg-zinc-800 p-1 rounded-lg">
                     {/* Filter Buttons */}
                     <button onClick={() => setFilterMode('all')} title="Show All Photos" className={`p-1 rounded-md transition-colors ${filterMode === 'all' ? 'bg-white dark:bg-zinc-700' : 'hover:bg-zinc-300 dark:hover:bg-zinc-700/50'}`}>
                         <ViewGridIcon className={`w-4 h-4 ${filterMode === 'all' ? 'text-cyan-500' : 'text-zinc-500 dark:text-zinc-400'}`} />
@@ -468,21 +511,45 @@ const App: React.FC = () => {
                     <button onClick={() => setFilterMode('untagged')} title="Show Untagged Photos" className={`p-1 rounded-md transition-colors ${filterMode === 'untagged' ? 'bg-white dark:bg-zinc-700' : 'hover:bg-zinc-300 dark:hover:bg-zinc-700/50'}`}>
                         <LocationMarkerOffIcon className={`w-4 h-4 ${filterMode === 'untagged' ? 'text-cyan-500' : 'text-zinc-500 dark:text-zinc-400'}`} />
                     </button>
+                  </div>
                 </div>
               </div>
               <div className="flex-1 overflow-y-auto pr-1">
                 {filteredPhotos.length > 0 ? (
+                  groupingMode === 'none' ? (
                     <div className="grid grid-cols-4 gap-3">
                       {filteredPhotos.map(photo => (
-                          <PhotoListItem
-                            key={photo.id}
-                            photo={photo}
-                            isSelected={selectedPhotoIds.includes(photo.id)}
-                            onSelect={handleSelectPhoto}
-                            onDelete={handleDeletePhoto}
-                          />
+                        <PhotoListItem
+                          key={photo.id}
+                          photo={photo}
+                          isSelected={selectedPhotoIds.includes(photo.id)}
+                          onSelect={handleSelectPhoto}
+                          onDelete={handleDeletePhoto}
+                        />
                       ))}
-                  </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-6">
+                      {Object.entries(groupedPhotos).map(([groupName, group]) => (
+                        <section key={groupName}>
+                          <div className="sticky top-0 z-10 -mx-1 px-1 py-1 backdrop-blur supports-[backdrop-filter]:bg-zinc-50/60 supports-[backdrop-filter]:dark:bg-zinc-900/60 bg-zinc-50 dark:bg-zinc-900/80 border-b border-zinc-200/60 dark:border-zinc-800/60">
+                            <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 truncate" title={groupName}>{groupName}</h3>
+                          </div>
+                          <div className="mt-3 grid grid-cols-4 gap-3">
+                            {group.map((photo) => (
+                              <PhotoListItem
+                                key={photo.id}
+                                photo={photo}
+                                isSelected={selectedPhotoIds.includes(photo.id)}
+                                onSelect={handleSelectPhoto}
+                                onDelete={handleDeletePhoto}
+                              />
+                            ))}
+                          </div>
+                        </section>
+                      ))}
+                    </div>
+                  )
                 ) : (
                   <div className="flex flex-col items-center justify-center h-full text-center p-4">
                     <PhotoUploader onFilesSelected={handleFilesSelected} onOpenNativeDialog={handleOpenFileDialog} />
