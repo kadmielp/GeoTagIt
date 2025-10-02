@@ -1,101 +1,124 @@
-# GeoTagIt
+# GeoTagIt v1.0.0
 
-GeoTagIt is a modern, cross-platform desktop application designed for intuitive and efficient geotagging of your photos. Built with a focus on user experience and performance, it provides a simple way to add, edit, and view location data for your image library. The application can be run as a standalone desktop app (powered by Tauri) for full file system access or directly in a web browser with slightly limited functionality.
+GeoTagIt is a modern, cross-platform desktop application designed for intuitive and efficient geotagging of your photos. Built with a focus on user experience and performance, it provides a simple way to add, edit, and view location data for your image library.
 
 ## Key Features
 
-*   **Direct File Modification**: In its primary desktop mode, GeoTagIt reads and writes EXIF geotag data directly to your image files (JPEG & TIFF), ensuring the changes are permanent and recognized by other software.
-*   **Interactive Map Tagger**:
-    *   Visually pin locations by clicking directly on a world map.
-    *   Fine-tune coordinates by dragging the map pin.
-    *   Manually input precise latitude and longitude for expert control.
+*   **Direct File Modification**: Reads and writes EXIF geotag data directly to your image files (JPEG & TIFF), ensuring changes are permanent and recognized by other software.
+*   **Interactive Map Tagger**: Visually pin locations by clicking directly on a world map, fine-tune coordinates by dragging, or manually input precise latitude and longitude.
 *   **Instant Location Search**: Get real-time address suggestions as you type, powered by OpenStreetMap's Nominatim geocoding service.
-*   **Efficient Multi-Photo Workflow**: Select and tag multiple photos at once. Standard `Click` and `Ctrl/Cmd + Click` controls make batch editing simple.
+*   **Advanced Multi-Select**: 
+    *   Toggle multi-select mode with a dedicated checkbox button
+    *   Click photos to toggle selection without deselecting others
+    *   Select All/Clear All functionality
+    *   Visual selection counter and check icons
+*   **Smart Photo Organization**:
+    *   Group photos by folder with sticky headers
+    *   Filter by all, geotagged, or untagged photos
+    *   Clean border-only selection design
 *   **Multiple Views**:
-    *   **Editor View**: A side-by-side layout to view your photo list, preview selected images, and access the geotagging panel.
-    *   **World View**: See all your geotagged photos plotted on a global map.
-*   **Photo Filtering**: Quickly filter your collection to show all, geotagged, or untagged photos.
-*   **Light & Dark Modes**: A beautifully crafted interface that adapts to your preference and saves your choice.
-*   **Browser Mode**: Can be run in a web browser. In this mode, instead of modifying files directly, it allows you to download a new copy of the image with the geotag data embedded.
+    *   **Editor View**: Side-by-side layout with photo list, preview, and geotagging panel
+    *   **World View**: See all geotagged photos plotted on a global map with circular thumbnails
+*   **Modern UI**: Light & dark modes with beautiful, responsive design
+*   **Cross-Platform**: Runs as desktop app (Tauri) or in web browser
 
 ## Technologies Used
 
-*   **Frontend**: React (v18) with TypeScript
-*   **Desktop Runtime**: Tauri (with a Rust backend)
+*   **Frontend**: React 18 with TypeScript
+*   **Desktop Runtime**: Tauri with Rust backend
 *   **Styling**: Tailwind CSS
 *   **Mapping**: Leaflet.js & OpenStreetMap
 *   **Geocoding**: OpenStreetMap Nominatim
-*   **EXIF Handling**:
-    *   `rexif` / `little_exif` (Rust crates) for robust EXIF metadata manipulation in the desktop app.
-    *   A custom TypeScript-based EXIF writer for the browser-based fallback.
+*   **EXIF Handling**: `rexif`/`little_exif` (Rust) for desktop, custom TypeScript EXIF writer for browser
 
-## How to Run the Application
+## Quick Start
 
-### Prerequisites
+### Desktop App (Recommended)
 
-*   Node.js and npm
-*   Rust and Cargo
-*   On Windows, install Visual Studio Build Tools (C++ workload) for Tauri
+1. **Install dependencies**:
+   ```bash
+   npm install
+   ```
 
-### Development Mode (Desktop/Tauri)
+2. **Run in development**:
+   ```bash
+   npm run tauri dev
+   ```
 
-1.  **Install dependencies**:
-    ```bash
-    npm install
-    ```
-2.  **Run the desktop app in dev**:
-    ```bash
-    npm run tauri dev
-    ```
-    This launches the Tauri window pointing at the Vite dev server. Drag & drop photos or use the Add Photos button. Thumbnails should render using the Tauri asset protocol.
+3. **Build for production**:
+   ```bash
+   npm run tauri build
+   ```
 
-### Development Mode (Browser-only)
-
-The app can also run purely in the browser with limited file access (EXIF writes are not persisted to disk):
+### Browser Mode
 
 ```bash
 npm run dev
 ```
-Open the printed local URL. In this mode, geotag writes produce downloadable images.
 
-### Building for Production
+## Usage
 
-1.  **Install dependencies**:
-    ```bash
-    npm install
-    ```
-2.  **Build the application**:
-    ```bash
-    npm run tauri build
-    ```
-    This will create a standalone executable in `src-tauri/target/release/`.
+1. **Add Photos**: Click the "+" button or drag & drop photos
+2. **Multi-Select**: Click the checkbox button to enable multi-select mode
+3. **Select Photos**: Click photos to toggle selection (cyan border + check icon)
+4. **Geotag**: Use the map, search, or manual input to set coordinates
+5. **Apply**: Click "Apply Geotag" to save location data to selected photos
+6. **View**: Switch to World View to see all geotagged photos on the map
 
-After installation, run GeoTagIt and add photos. Thumbnails should display in the sidebar, the main preview, and in World View markers.
+## Changelog
 
-## Troubleshooting Thumbnails (Tauri)
+### v1.0.0 - Initial Release
 
-If thumbnails do not appear after build:
+#### New Features
+- **Multi-Select Mode**: Dedicated checkbox button to enable/disable multi-select
+- **Smart Selection**: Click photos to toggle selection without deselecting others
+- **Selection Counter**: Shows "X selected" in header when photos are selected
+- **Select All/Clear All**: Quick buttons for batch selection operations
+- **Photo Grouping**: Group photos by folder with sticky headers
+- **Visual Selection Indicators**: Cyan borders and check icons for selected photos
+- **Circular Map Thumbnails**: Clean circular photo thumbnails in World View
+- **Improved UI Controls**: Separate multi-select toggle from filter buttons
 
-- Ensure you are adding photos via native dialog or drag & drop so paths are real filesystem paths.
-- We rely on `convertFileSrc(file.path)` to produce Tauri-safe URLs.
-- We configure the Tauri security and protocol to allow these URLs:
-  - `src-tauri/tauri.conf.json` sets:
-    - Production CSP to allow `blob:` and `data:` in `img-src`.
-    - Asset protocol `scope: ["**/*"]` to serve any local path resolved by `convertFileSrc`.
-    - Dev CSP includes `asset:`/`https://asset.localhost` so images work in dev.
-- Use DevTools (Ctrl+Shift+I) in the app and check the `<img src>`:
-  - It should be an `asset://` or `https://asset.localhost/...` URL, not a raw `C:\...` path.
-  - If it’s a raw path, verify that Tauri dev/build is used and that `App.tsx` logs show “Data URL created from path:”.
+#### UI Improvements
+- **Clean Selection Design**: Border-only selection without cluttered checkboxes
+- **Better Visual Hierarchy**: Clear separation between different control types
+- **Smart Icon Positioning**: Prevents overlap between selection, geotag, and error indicators
+- **Enhanced Hover States**: Better feedback for interactive elements
+- **Responsive Layout**: Improved spacing and alignment
 
-## Keyboard and Selection
+#### Technical Improvements
+- **Optimized Selection Logic**: Efficient multi-select state management
+- **Memoized Grouping**: Performance-optimized photo grouping calculations
+- **Better Error Handling**: Improved positioning of error indicators
+- **Type Safety**: Enhanced TypeScript interfaces and prop types
 
-- Click to select a photo, Ctrl/Cmd+Click to multi-select.
-- Use the search box in the Geotagger to find a location, or click the map to set coordinates, then “Apply Geotag to Photo”.
+#### Bug Fixes
+- **Fixed Duplicate Buttons**: Removed confusing duplicate grid icons
+- **Improved Icon Semantics**: Proper icons for different functions (checkbox for multi-select, collection for grouping)
+- **Better State Management**: Consistent selection behavior across different modes
 
-## Potential Improvements
+## System Requirements
 
-*   **Error Handling**: Improve error handling for EXIF writing, especially for unsupported file formats or corrupted metadata.
-*   **Undo/Redo**: Implement an undo/redo system for geotagging actions.
-*   **Map Enhancements**: Add more map layers (e.g., satellite, terrain) and features like displaying a heatmap of photo locations.
-*   **Metadata Panel**: Create a panel to display all existing EXIF metadata for a selected photo.
-*   **Performance**: For very large photo libraries, virtualize the photo list to improve rendering performance.
+- **Desktop**: Windows, macOS, or Linux
+- **Browser**: Modern web browser with JavaScript enabled
+- **File Formats**: JPEG and TIFF for geotag writing (other formats supported for viewing)
+
+## Troubleshooting
+
+### Thumbnails Not Showing (Desktop)
+- Ensure photos are added via native dialog or drag & drop
+- Check that `convertFileSrc()` is working in DevTools
+- Verify Tauri security settings in `tauri.conf.json`
+
+### Geotag Not Saving
+- Only JPEG and TIFF files support EXIF geotag writing
+- Ensure file permissions allow writing
+- Check for file corruption or unsupported formats
+
+## Contributing
+
+This project uses modern web technologies and follows React best practices. Contributions are welcome!
+
+## License
+
+See LICENSE file for details.
