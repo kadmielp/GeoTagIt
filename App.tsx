@@ -23,7 +23,7 @@ import GeotaggerPanel from './components/GeotaggerPanel';
 import StatusBar from './components/StatusBar';
 import SettingsModal from './components/SettingsModal';
 import WorldView from './components/WorldView';
-import { LocationMarkerIcon, CheckCircleIcon, ViewGridIcon, LocationMarkerOffIcon, PlusIcon } from './components/Icons';
+import { LocationMarkerIcon, CheckCircleIcon, ViewGridIcon, LocationMarkerOffIcon, PlusIcon, CollectionIcon, CheckIcon } from './components/Icons';
 import PhotoUploader from './components/PhotoUploader';
 import { writeGeotagToImage, downloadImageWithGeotag } from './utils/exifWriter';
 
@@ -40,6 +40,7 @@ const App: React.FC = () => {
   const [view, setView] = useState<View>('editor');
   const [filterMode, setFilterMode] = useState<FilterMode>('all');
   const [groupingMode, setGroupingMode] = useState<GroupingMode>('none');
+  const [isGroupingMenuOpen, setIsGroupingMenuOpen] = useState<boolean>(false);
   
   const [theme, setTheme] = useState<Theme>(() => {
     return (localStorage.getItem('theme') as Theme) || 'dark';
@@ -461,6 +462,21 @@ const App: React.FC = () => {
     return groups;
   }, [filteredPhotos, groupingMode]);
 
+  // Close grouping menu on outside click
+  useEffect(() => {
+    if (!isGroupingMenuOpen) return;
+    const onClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+      // Close if clicking outside any element with data-grouping-menu
+      if (!target.closest('[data-grouping-menu]')) {
+        setIsGroupingMenuOpen(false);
+      }
+    };
+    window.addEventListener('mousedown', onClick);
+    return () => window.removeEventListener('mousedown', onClick);
+  }, [isGroupingMenuOpen]);
+
   return (
     <div className="flex flex-col h-screen antialiased">
       <Header 
@@ -489,16 +505,36 @@ const App: React.FC = () => {
                 </div>
 
                 <div className="flex items-center space-x-2">
-                  {/* Grouping dropdown */}
-                  <select
-                    value={groupingMode}
-                    onChange={(e) => setGroupingMode(e.target.value as GroupingMode)}
-                    title="Group photos"
-                    className="text-xs bg-zinc-200 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                  >
-                    <option value="none">No Grouping</option>
-                    <option value="folder">Folder</option>
-                  </select>
+                  {/* Grouping popover */}
+                  <div className="relative" data-grouping-menu>
+                    <button
+                      onClick={() => setIsGroupingMenuOpen(v => !v)}
+                      title="Group by"
+                      className={`p-1 rounded-md transition-colors ${isGroupingMenuOpen ? 'bg-white dark:bg-zinc-700' : 'bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700/50'}`}
+                    >
+                      <CollectionIcon className={`w-4 h-4 ${isGroupingMenuOpen ? 'text-cyan-500' : 'text-zinc-500 dark:text-zinc-400'}`} />
+                    </button>
+
+                    {isGroupingMenuOpen && (
+                      <div className="absolute left-0 mt-2 w-56 rounded-xl shadow-2xl border border-zinc-200/50 dark:border-zinc-800/60 bg-zinc-50 dark:bg-zinc-800/90 backdrop-blur z-20">
+                        <div className="px-3 pt-3 pb-2 text-[10px] font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">Group By</div>
+                        <button
+                          onClick={() => { setGroupingMode('none'); setIsGroupingMenuOpen(false); }}
+                          className={`w-full flex items-center justify-between px-3 py-2 text-sm rounded-lg hover:bg-zinc-200/70 dark:hover:bg-zinc-700/60 ${groupingMode === 'none' ? 'text-zinc-900 dark:text-zinc-100' : 'text-zinc-700 dark:text-zinc-300'}`}
+                        >
+                          <span>No Grouping</span>
+                          {groupingMode === 'none' && <CheckIcon className="w-4 h-4 text-cyan-500" />}
+                        </button>
+                        <button
+                          onClick={() => { setGroupingMode('folder'); setIsGroupingMenuOpen(false); }}
+                          className={`w-full flex items-center justify-between px-3 py-2 text-sm rounded-lg hover:bg-zinc-200/70 dark:hover:bg-zinc-700/60 ${groupingMode === 'folder' ? 'text-zinc-900 dark:text-zinc-100' : 'text-zinc-700 dark:text-zinc-300'}`}
+                        >
+                          <span>Folder</span>
+                          {groupingMode === 'folder' && <CheckIcon className="w-4 h-4 text-cyan-500" />}
+                        </button>
+                      </div>
+                    )}
+                  </div>
 
                   <div className="flex items-center space-x-1 bg-zinc-200 dark:bg-zinc-800 p-1 rounded-lg">
                     {/* Filter Buttons */}
